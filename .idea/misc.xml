@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.29025641025641025" />
         <entry key="app/src/main/res/drawable/share_maroon_24.xml" value="0.153125" />
         <entry key="app/src/main/res/layout/activity_home_page.xml" value="0.128419452887538" />
         <entry key="app/src/main/res/layout/fragment_posts_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/navigation_menu_header.xml" value="0.13551165146909827" />
+        <entry key="app/src/main/res/menu/navigation_menu.xml" value="0.24722222222222223" />
       </map>
     </option>
   </component>
