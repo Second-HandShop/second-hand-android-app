@@ -17,10 +17,21 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:padding="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:paddingStart="-10dp"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@null"
+                app:queryHint="Search item"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_container"
@@ -58,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/navigation_menu"
-        app:headerLayout="@layout/navigation_menu_header"/>
+        app:headerLayout="@layout/navigation_menu_header"
+        app:menu="@menu/navigation_menu"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
