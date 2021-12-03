@@ -1,15 +1,24 @@
 package com.android.secondhand
 
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import android.view.ViewGroup
+import androidx.appcompat.app.ActionBar
+import androidx.core.view.marginRight
+
 
 class HomePageActivity : AppCompatActivity() {
 
@@ -22,6 +31,7 @@ class HomePageActivity : AppCompatActivity() {
 
         // set up Toolbar
         setSupportActionBar(findViewById(R.id.home_page_toolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         // set up Navigation Drawer Menu
         drawerLayout = findViewById(R.id.drawer_layout)
@@ -47,6 +57,7 @@ class HomePageActivity : AppCompatActivity() {
             tab.text = categories[position]
         }.attach()
     }
+
 
     // click handlers for the icons on the Toolbar
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
