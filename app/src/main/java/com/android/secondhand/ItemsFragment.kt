@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-class PostsFragment : Fragment() {
+class ItemsFragment : Fragment() {
 
     // static categories
     val categories = listOf<String>("All", "Household", "Furniture", "Books & Supplies", "Electronics", "Cars")
@@ -19,9 +18,9 @@ class PostsFragment : Fragment() {
     lateinit var tab: String
     lateinit var root: View
     lateinit var recyclerView: RecyclerView
-    lateinit var recyclerViewAdapter: PostsRecyclerViewAdapter
-    val allPosts = PostDataUtils.getPosts()
-    var items = ArrayList<PostData>()
+    lateinit var recyclerViewAdapter: ItemsRecyclerViewAdapter
+    val allPosts = ItemDataUtils.getPosts()
+    var items = ArrayList<Item>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +31,7 @@ class PostsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        root = inflater.inflate(R.layout.fragment_posts, container, false)
+        root = inflater.inflate(R.layout.fragment_items, container, false)
 
         // filter posts by category (tab)
         if(tab.equals("All")){
@@ -45,8 +44,8 @@ class PostsFragment : Fragment() {
         }
 
         // set up RecyclerView
-        recyclerViewAdapter = PostsRecyclerViewAdapter(items)
-        recyclerView = root.findViewById<RecyclerView>(R.id.posts_container)
+        recyclerViewAdapter = ItemsRecyclerViewAdapter(items)
+        recyclerView = root.findViewById<RecyclerView>(R.id.items_container)
         recyclerView.layoutManager = GridLayoutManager(this.context, 2)
         recyclerView.adapter = recyclerViewAdapter
 
@@ -56,7 +55,7 @@ class PostsFragment : Fragment() {
     companion object{
         @JvmStatic
         fun newInstance(position: Int) =
-            PostsFragment().apply {
+            ItemsFragment().apply {
                 arguments = Bundle().apply {
                     putInt("TAB_POSITION", position)
                 }

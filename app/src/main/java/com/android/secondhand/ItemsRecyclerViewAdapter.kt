@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
-class PostsRecyclerViewAdapter(val items: List<PostData>): RecyclerView.Adapter<PostsRecyclerViewAdapter.PostViewHolder>() {
+class ItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<ItemsRecyclerViewAdapter.PostViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_posts_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_item_card, parent, false)
         return PostViewHolder(itemView)
     }
 
