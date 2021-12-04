@@ -5,12 +5,20 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.29025641025641025" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.29025641025641025" />
+        <entry key="app/src/main/res/drawable/layout_border.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/drawable/layout_top_border.xml" value="0.2713541666666667" />
         <entry key="app/src/main/res/drawable/share_maroon_24.xml" value="0.153125" />
         <entry key="app/src/main/res/layout/activity_home_page.xml" value="0.128419452887538" />
+        <entry key="app/src/main/res/layout/activity_image_edit_page.xml" value="0.14764492753623187" />
+        <entry key="app/src/main/res/layout/activity_item_edit_page.xml" value="0.12208713272543059" />
+        <entry key="app/src/main/res/layout/fragment_item_card.xml" value="0.12208713272543059" />
+        <entry key="app/src/main/res/layout/fragment_items.xml" value="0.12208713272543059" />
+        <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.12208713272543059" />
         <entry key="app/src/main/res/layout/fragment_posts_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/navigation_menu_header.xml" value="0.13551165146909827" />
         <entry key="app/src/main/res/menu/home_page_toolbar_menu.xml" value="0.20555555555555555" />
         <entry key="app/src/main/res/menu/navigation_menu.xml" value="0.24722222222222223" />
+        <entry key="app/src/main/res/xml/file_paths.xml" value="0.13043478260869565" />
       </map>
     </option>
   </component>

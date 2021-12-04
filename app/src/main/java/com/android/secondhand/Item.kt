@@ -2,7 +2,7 @@ package com.android.secondhand
 
 import java.io.Serializable
 
-data class PostData (
+data class Item (
     val name: String,
     val price: Int,
     val category: String,
