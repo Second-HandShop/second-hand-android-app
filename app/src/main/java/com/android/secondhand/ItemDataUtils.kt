@@ -1,14 +1,12 @@
 package com.android.secondhand
 
 import com.google.gson.Gson
-import com.google.gson.stream.JsonReader
-import java.io.StringReader
 
-class PostDataUtils {
+class ItemDataUtils {
 
     companion object{
 
-        fun getPosts(): List<PostData>{
+        fun getPosts(): List<Item>{
             val posts = """
         [
     {
@@ -302,7 +300,7 @@ class PostDataUtils {
         """.trimIndent()
 
             // create Movie List from JSON String by using Gson!!
-            return Gson().fromJson(posts, Array<PostData>::class.java).asList()
+            return Gson().fromJson(posts, Array<Item>::class.java).asList()
         }
     }
 }

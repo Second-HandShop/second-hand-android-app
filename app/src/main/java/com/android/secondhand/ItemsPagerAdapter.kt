@@ -3,7 +3,7 @@ package com.android.secondhand
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 
-class PostsPagerAdapter(fa: FragmentActivity): androidx.viewpager2.adapter.FragmentStateAdapter(fa) {
+class ItemsPagerAdapter(fa: FragmentActivity): androidx.viewpager2.adapter.FragmentStateAdapter(fa) {
 
     override fun getItemCount(): Int {
         // 6 categories (tabs)
@@ -11,6 +11,6 @@ class PostsPagerAdapter(fa: FragmentActivity): androidx.viewpager2.adapter.Fragm
     }
 
     override fun createFragment(position: Int): Fragment {
-        return PostsFragment.newInstance(position)
+        return ItemsFragment.newInstance(position)
     }
 }
