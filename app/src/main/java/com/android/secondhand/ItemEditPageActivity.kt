@@ -474,9 +474,9 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
         val cameraPermission =
             ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA)
 
-        val camera = cameraPermission == PackageManager.PERMISSION_DENIED
-        val read = readMediaPermission == PackageManager.PERMISSION_DENIED
-        val write = writeMediaPermission == PackageManager.PERMISSION_DENIED
+        val camera = cameraPermission == PackageManager.PERMISSION_GRANTED
+        val read = readMediaPermission == PackageManager.PERMISSION_GRANTED
+        val write = writeMediaPermission == PackageManager.PERMISSION_GRANTED
 
         if(camera && read && write){
             return true
