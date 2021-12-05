@@ -1,6 +1,7 @@
 package com.android.secondhand
 
 import com.google.gson.Gson
+import io.swagger.server.models.Item
 
 class ItemDataUtils {
 

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import io.swagger.server.models.Item
 
 class ItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<ItemsRecyclerViewAdapter.PostViewHolder>() {
 
@@ -29,9 +30,11 @@ class ItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<Item
         val itemPrice = itemView.findViewById<TextView>(R.id.itemPrice)
 
         fun bind(position: Int) {
-            itemName.setText(items[position].name)
-            itemPrice.setText("$ ${items[position].price.toString()}")
-            val url = "https://res.cloudinary.com/dqg4lzcl8/image/upload/" + items[position].image_paths[0]
+            itemName.text = items[position].name
+            itemPrice.text = items[position].price.toString()
+
+            val url = "https://res.cloudinary.com/dqg4lzcl8/image/upload/" + (items[position].resources?.get(0)?.resourceLink
+                ?: "")
             Picasso.get().load(url).error(R.mipmap.ic_launcher).fit().centerInside().into(itemImage)
         }
     }
