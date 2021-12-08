@@ -30,9 +30,9 @@ data class ItemResource (
     */
     enum class ResourceType(val value: kotlin.Any){
     
-        iMAGE("IMAGE"),
+        IMAGE("IMAGE"),
     
-        vIDEO("VIDEO");
+        VIDEO("VIDEO");
     
     }
 

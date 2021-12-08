@@ -33,9 +33,17 @@ import java.lang.Exception
 import android.widget.ArrayAdapter
 
 import android.widget.Spinner
-
-
-
+import com.android.secondhand.apis.Constant
+import com.android.volley.NetworkResponse
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.HttpHeaderParser
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
+import io.swagger.server.models.Item
+import io.swagger.server.models.ItemResource
+import org.json.JSONObject
 
 
 class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRecyclerViewAdapter.OnImageClickFromAdapter {
@@ -63,6 +71,11 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
     val imagesBitmap = ArrayList<Bitmap>()
     lateinit var recyclerView: RecyclerView
     lateinit var recyclerViewAdapter: ImagesRecyclerViewAdapter
+    lateinit var progressWrapper: FrameLayout
+    lateinit var postItemButton: Button
+
+    //saving the audios and videos after the upload to cloudinary
+    val itemResources = java.util.ArrayList<ItemResource>();
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +114,8 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
         }
 
         // "postItem" button triggers uploading images & video (if any) to cloudinary
-        findViewById<Button>(R.id.postItem).setOnClickListener(this)
+        postItemButton = findViewById(R.id.postItem)
+        postItemButton.setOnClickListener(this)
 
         // set up spinner for item categories
 
@@ -114,6 +128,8 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
         //set the spinners adapter to the previously created one.
         dropdown.adapter = adapter
 
+        //start posting... progress on screen
+        progressWrapper = findViewById(R.id.progressBarWrapper)
     }
 
 
@@ -123,10 +139,63 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
                 selectVideo()
             }
             R.id.postItem -> {
-
                 uploadToCloudinary()
             }
         }
+    }
+
+    private fun postItemData() {
+        var itemName = findViewById<EditText>(R.id.itemName)
+        var description = findViewById<EditText>(R.id.itemDescription)
+        var category = findViewById<Spinner>(R.id.item_category)
+        var price = findViewById<EditText>(R.id.itemPrice)
+
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'")
+        val currentDateAndTime: String = simpleDateFormat.format(Date());
+        //TODO: get from firebase
+        var userId = "bhatttrahul712@gmail.com"
+
+        val item: Item = Item(
+            name = itemName.text.toString(),
+            description = description.text.toString(),
+            category = category.selectedItem.toString(),
+            addedOn = currentDateAndTime,
+            price = price.text.toString().toFloat(),
+            soldInfo = null,
+            userId = userId,
+            resources = itemResources.toTypedArray()
+        )
+
+
+        val jsonPostData = JSONObject(Gson().toJson(item))
+
+        //call post api
+        val que = Volley.newRequestQueue(this)
+        val req = object: JsonObjectRequest(
+            Request.Method.POST,Constant.API_BASE_ADDRESS,jsonPostData,
+            { response ->
+                //end progress loader on screen and show toast message
+                progressWrapper.visibility = View.GONE
+                Toast.makeText(this, "Item data posted.",
+                    Toast.LENGTH_LONG).show()
+                //TODO: redirect to user Items activity
+            },
+            { error ->
+                println("Error from post api - \n" + error.message)
+                //end progress loader on screen and show toast message
+                progressWrapper.visibility = View.GONE
+                Toast.makeText(this, "There was an error posting data, please retry later",
+                    Toast.LENGTH_LONG).show()
+                postItemButton.isEnabled = true
+            }
+        ) {
+            override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject> {
+                return Response.success(
+                    JSONObject(),
+                    HttpHeaderParser.parseCacheHeaders(response));
+            }
+        }
+        que.add(req)
     }
 
 
@@ -368,28 +437,45 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
 
         val callback = object : UploadCallback {
 
-            val itemName = findViewById<TextView>(R.id.itemDescription)
-
             override fun onStart(requestId: String) {
-                itemName.setText("start")
             }
 
             override fun onProgress(requestId: String, bytes: Long, totalBytes: Long) {
-                itemName.setText("Uploading... ")
             }
 
             override fun onSuccess(requestId: String, resultData: Map<*, *>) {
-                itemName.setText("image URL: " + resultData["url"].toString())
+                val itemResource = ItemResource(
+                    name = resultData["original_filename"].toString(),
+                    resourceType = getResourceTypeEnum(resultData["resource_type"].toString()),
+                    resourceLink = resultData["url"].toString()
+                )
+                itemResources.add(itemResource)
+
+                if(itemResources.size == imagesAbosulePath.size) {
+                    postItemData()
+                }
             }
 
             override fun onError(requestId: String?, error: ErrorInfo) {
-                itemName.setText("error: " + error.getDescription())
             }
 
             override fun onReschedule(requestId: String?, error: ErrorInfo) {
-                itemName.setText("Reshedule: " + error.getDescription())
+            }
+
+            private fun getResourceTypeEnum(resourceType: String) : ItemResource.ResourceType {
+                return if(resourceType.equals("image", ignoreCase = true)) {
+                    ItemResource.ResourceType.IMAGE
+                } else {
+                    ItemResource.ResourceType.VIDEO
+                }
             }
         }
+
+        //disable post button
+        postItemButton.isEnabled = false
+
+        //start posting... progress on screen
+        progressWrapper.visibility = View.VISIBLE
 
         // upload video
         if(videoViewUri != null){
@@ -408,6 +494,9 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
                 .callback(callback).dispatch()
         }
 
+        if(videoViewUri == null && imagesAbosulePath.size == 0) {
+            postItemData()
+        }
     }
 
     // get file absolute path for images selected from gallery and videos
