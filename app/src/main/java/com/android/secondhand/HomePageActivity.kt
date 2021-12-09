@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
@@ -64,12 +65,28 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         // bind ViewPager and PostsPagerAdapter
         val viewPager = findViewById<ViewPager2>(R.id.recyclerview_container)
-        viewPager.adapter = ItemsPagerAdapter(this)
+        val viewPagerAdapter = ItemsPagerAdapter(this)
+        viewPager.adapter = viewPagerAdapter
 
         // bind ViewPager and TabLayout
         TabLayoutMediator(tabs, viewPager) { tab, position ->
             tab.text = categories[position]
         }.attach()
+
+        var searchBar: SearchView = findViewById(R.id.searchBar)
+
+        searchBar.setOnQueryTextListener(
+            object: SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    (viewPagerAdapter.getItem(viewPager.currentItem))?.updateData(query)
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return false
+                }
+            }
+        )
     }
 
 

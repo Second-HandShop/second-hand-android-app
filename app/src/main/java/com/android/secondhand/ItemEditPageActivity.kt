@@ -152,10 +152,10 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
 
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'")
         val currentDateAndTime: String = simpleDateFormat.format(Date());
-        //TODO: get from firebase
+        //TODO: get user from firebase
         var userId = "bhatttrahul712@gmail.com"
 
-        val item: Item = Item(
+        val item = Item(
             name = itemName.text.toString(),
             description = description.text.toString(),
             category = category.selectedItem.toString(),

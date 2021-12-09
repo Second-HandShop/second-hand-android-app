@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.secondhand.apis.Constant
@@ -32,23 +33,75 @@ class ItemsFragment : Fragment() {
     lateinit var recyclerViewAdapter: ItemsRecyclerViewAdapter
     var items = ArrayList<Item>()
     lateinit var auth: FirebaseAuth
+    lateinit var currentUserName: String
+    lateinit var searchString: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             tab = categories[ it.getInt("TAB_POSITION") ]
+            searchString = it.getString("SEARCH_STRING").toString()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_items, container, false)
-        //:TODO uncomment the code on the next line
-        val currentUserName = "bhatttrahul712@gmail.com"//auth.currentUser?.displayName
+        //:TODO uncomment the code on the next line fetch from firebase
+        currentUserName = "bhatttrahul712@gmail.com"//auth.currentUser?.displayName
+
+        updateData(searchString)
+
+
+        // filter posts by category (tab)
+//        if(tab.equals("All")){
+//            items = ArrayList(allPosts)
+//        }else{
+//            allPosts.forEach {
+//                if(it.category.equals(tab))
+//                    items.add(it)
+//            }
+//        }
+
+        // set up RecyclerView
+
+
+        return root
+    }
+
+    companion object{
+        @JvmStatic
+        fun newInstance(position: Int, searchString: String) =
+            ItemsFragment().apply {
+                arguments = Bundle().apply {
+                    putInt("TAB_POSITION", position)
+                    putString("SEARCH_STRING", searchString)
+                }
+            }
+    }
+
+
+    fun updateData(searchString: String?) {
         val requestQueue: RequestQueue = Volley.newRequestQueue(activity)
 
+        var url = Constant.API_BASE_ADDRESS
+        var questionMarkAdded = false
+        if(!tab.equals("all", ignoreCase = true)) {
+            url = "$url?categories=$tab"
+            questionMarkAdded = true
+        }
+
+        if(searchString != null && searchString.isNotBlank()) {
+            url = if(!questionMarkAdded) {
+                "$url?"
+            } else{
+                "$url&"
+            }
+            url += "name=$searchString"
+        }
+
         val gsonRequest = GsonRequest(
-            Constant.API_BASE_ADDRESS,
+            url,
             GetItemsByUserIdsResponse::class.java,
             null,
             { response ->
@@ -70,30 +123,5 @@ class ItemsFragment : Fragment() {
             }
         )
         requestQueue.add(gsonRequest)
-
-        // filter posts by category (tab)
-//        if(tab.equals("All")){
-//            items = ArrayList(allPosts)
-//        }else{
-//            allPosts.forEach {
-//                if(it.category.equals(tab))
-//                    items.add(it)
-//            }
-//        }
-
-        // set up RecyclerView
-
-
-        return root
-    }
-
-    companion object{
-        @JvmStatic
-        fun newInstance(position: Int) =
-            ItemsFragment().apply {
-                arguments = Bundle().apply {
-                    putInt("TAB_POSITION", position)
-                }
-            }
     }
 }
