@@ -16,6 +16,7 @@ import android.graphics.Bitmap
 import android.os.Environment
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.util.Log
 import java.io.*
 import androidx.core.content.FileProvider
 import java.text.SimpleDateFormat
@@ -61,7 +62,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
 
     // for uploading to cloudinary
     var videoViewUri: Uri? = null
-    val imagesAbosulePath = ArrayList<String>()
+    var imagesAbosulePath = ArrayList<String>()
 
     // for handling two kinds of image click events
     var addNewImage: Boolean = true
@@ -241,8 +242,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
 
                 // retrieve the file absolute paths stored during the file creation
                 val absolutePath = imagesAbosulePath.get(imagesAbosulePath.size - 1)
-                imagesAbosulePath.add(imagesAbosulePath.size, absolutePath)
-                
+
                 // retrieve bitmap for displaying image on RecyclerView
                 bitmap = BitmapFactory.decodeFile(absolutePath)
 
@@ -253,7 +253,10 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
 
                 // retrieve file absolute path for uploading to cloudinary
                 val filePath = getPath(this, selectedPhotoUri, IMAGE)
-                imagesAbosulePath.add(imagesAbosulePath.size, filePath!!)
+                if(addNewImage)
+                    imagesAbosulePath.add(imagesAbosulePath.size, filePath!!)
+                else
+                    imagesAbosulePath.set(replaceImageAtPosition, filePath!!)
 
 
             }else if(requestCode == REQUEST_VIDEO_GALLERY || requestCode == REQUEST_VIDEO_CAPTURE){
@@ -293,6 +296,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
 
         // check for permission
         if(checkForApplicationPermission()){
+
             val options = arrayOf<CharSequence>("Take Photo", "Choose from Gallery", "Cancel")
             val builder= AlertDialog.Builder(this)
             builder.setTitle("Add Photo!")
@@ -401,10 +405,14 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
 
         builder.setItems(options, DialogInterface.OnClickListener { dialog, item ->
             if (options[item].equals("Delete")) {
+
                 imagesBitmap.removeAt(position)
                 imagesAbosulePath.removeAt(position)
+//                imagesAbosulePath = ArrayList<String>(imagesAbosulePath.filterNotNull())
+//
+                Log.i("tab", "after deleting one.. imagesAbsolutePath=${imagesAbosulePath.size}")
                 // if not reaching the total limit of 6, show the static add_new_image icon at the end
-                if(imagesBitmap.size < 6) imagesBitmap.add(imagesBitmap.size, addImageIconBitmap)
+                if(imagesBitmap.get(imagesBitmap.size - 1) != addImageIconBitmap) imagesBitmap.add(imagesBitmap.size, addImageIconBitmap)
                 // refresh the RecyclerView
                 recyclerViewAdapter.notifyDataSetChanged()
                 recyclerView.swapAdapter(recyclerViewAdapter, true)
@@ -486,6 +494,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
             .callback(callback).dispatch()
         }
 
+
         // upload images
         imagesAbosulePath.forEach {
             MediaManager.get().upload(it)
@@ -558,7 +567,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
         )
         val writeMediaPermission = ContextCompat.checkSelfPermission(
             applicationContext,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
         val cameraPermission =
             ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA)
