@@ -5,8 +5,8 @@
         android:title="User Profile"
         android:icon="@drawable/ic_baseline_person_24"/>
 
-    <item android:id="@+id/sellList"
-        android:title="Your Items"
+    <item android:id="@+id/userItems"
+        android:title="User Items"
         android:icon="@drawable/ic_baseline_list_24"/>
 
     <item android:id="@+id/chatHistory"

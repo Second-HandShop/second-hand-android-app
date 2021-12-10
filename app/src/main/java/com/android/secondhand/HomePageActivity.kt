@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
+import com.android.secondhand.useritems.UserItems
 import com.cloudinary.android.MediaManager
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
@@ -109,6 +110,10 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         when(item.itemId){
             R.id.to_be_deleted -> {
                 val intent = Intent(this, ItemEditPageActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.userItems -> {
+                val intent = Intent(this, UserItems::class.java)
                 startActivity(intent)
             }
 
