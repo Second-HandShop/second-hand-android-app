@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
@@ -11,12 +12,15 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.android.secondhand.editPage.ItemEditPageActivity
 import com.android.secondhand.R
+import com.android.secondhand.login.LoginActivity
 import com.android.secondhand.showPage.ItemShowPageActivity
 import com.android.secondhand.useritems.UserItems
 import com.cloudinary.android.MediaManager
+import com.firebase.client.Firebase
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
 
 
 class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -24,6 +28,9 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     lateinit var drawerLayout: DrawerLayout
     lateinit var navigationView: NavigationView
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+
+    //Declare an instance of FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     companion object{
         var hasInitialized = false
@@ -94,6 +101,8 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 }
             }
         )
+
+        auth = FirebaseAuth.getInstance()
     }
 
 
@@ -122,7 +131,13 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 val intent = Intent(this, UserItems::class.java)
                 startActivity(intent)
             }
-
+            R.id.logout -> {
+                auth.signOut()
+                Toast.makeText(this, "User Logged out Successfully.",
+                    Toast.LENGTH_LONG).show()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
         }
         return true
     }

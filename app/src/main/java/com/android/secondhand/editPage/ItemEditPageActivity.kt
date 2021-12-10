@@ -34,6 +34,7 @@ import java.lang.Exception
 import android.widget.ArrayAdapter
 
 import android.widget.Spinner
+import com.android.secondhand.R
 import com.android.secondhand.apis.Constant
 import com.android.volley.NetworkResponse
 import com.android.volley.Request

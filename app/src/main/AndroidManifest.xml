@@ -38,13 +38,20 @@
             android:parentActivityName=".homepage.HomePageActivity"/>
         <activity
             android:name=".useritems.UserItems"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".homepage.HomePageActivity"/>
         <activity
             android:name=".login.SignUpActivity"
             android:exported="false" />
         <activity
             android:name=".login.LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".editPage.ItemEditPageActivity"
             android:exported="true"
@@ -53,11 +60,6 @@
         <activity
             android:name=".homepage.HomePageActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <provider
