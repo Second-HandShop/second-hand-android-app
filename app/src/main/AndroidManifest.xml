@@ -56,7 +56,7 @@
             android:name=".editPage.ItemEditPageActivity"
             android:exported="true"
             android:hardwareAccelerated="false"
-            android:parentActivityName=".homepage.HomePageActivity" />
+            android:parentActivityName=".useritems.UserItems" />
         <activity
             android:name=".homepage.HomePageActivity"
             android:exported="true">

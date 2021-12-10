@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.secondhand.R
 import com.android.secondhand.apis.Constant
 import com.android.secondhand.apis.GsonRequest
@@ -21,7 +22,7 @@ import io.swagger.server.models.Item
 class ItemsFragment : Fragment() {
 
     // static categories
-    val categories = listOf<String>("All", "Household", "Furniture", "Books & Supplies", "Electronics", "Cars")
+    val categories = listOf<String>("All", "Household", "Furniture", "Books and Supplies", "Electronics", "Cars")
 //        ,"Clothing & Shoes", "Sports & Outdoors", "Accessories", "Pet Supplies", "Musical Instruments", "Games & Toys", "Others")
 
     lateinit var tab: String
@@ -32,6 +33,7 @@ class ItemsFragment : Fragment() {
     lateinit var auth: FirebaseAuth
     lateinit var currentUserName: String
     lateinit var searchString: String
+    lateinit var pullToRefresh: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,11 @@ class ItemsFragment : Fragment() {
 
         updateData(searchString)
 
+         pullToRefresh = root.findViewById(R.id.pullToRefresh)
+        pullToRefresh.setOnRefreshListener {
+            updateData(searchString) // your code
+            pullToRefresh.isRefreshing = true
+        }
 
         // filter posts by category (tab)
 //        if(tab.equals("All")){
@@ -111,12 +118,14 @@ class ItemsFragment : Fragment() {
                 recyclerView = root.findViewById<RecyclerView>(R.id.items_container)
                 recyclerView.layoutManager = GridLayoutManager(this.context, 2)
                 recyclerView.adapter = recyclerViewAdapter
+                pullToRefresh.isRefreshing = false
             },
             { error ->
                 System.out.println("That did not work : \n" + error)
                 items = arrayListOf()
                 Toast.makeText(activity, "There was a problem retrieving data please retry after sometime",
                     Toast.LENGTH_LONG).show()
+                pullToRefresh.isRefreshing = false
             }
         )
         requestQueue.add(gsonRequest)

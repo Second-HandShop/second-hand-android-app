@@ -36,6 +36,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.android.secondhand.R
 import com.android.secondhand.apis.Constant
+import com.android.secondhand.useritems.UserItems
 import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.Response
@@ -182,6 +183,8 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
                 Toast.makeText(this, "Item data posted.",
                     Toast.LENGTH_LONG).show()
                 //TODO: redirect to user Items activity
+                val intent = Intent(this, UserItems::class.java)
+                startActivity(intent)
             },
             { error ->
                 println("Error from post api - \n" + error.message)

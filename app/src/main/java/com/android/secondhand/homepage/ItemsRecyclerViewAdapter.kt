@@ -35,7 +35,7 @@ class ItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<Item
             itemName.text = items[position].name
             itemPrice.text = items[position].price.toString()
 
-            val url = Constant.CLOUDINARY_BASE_URL + (items[position].resources?.get(0)?.resourceLink
+            val url = (items[position].resources?.get(0)?.resourceLink
                 ?: "")
             Picasso.get().load(url).error(R.mipmap.ic_launcher).fit().centerInside().into(itemImage)
         }

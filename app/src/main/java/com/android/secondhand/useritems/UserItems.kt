@@ -22,6 +22,11 @@ class UserItems : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_items)
 
+        // set up Toolbar
+        setSupportActionBar(findViewById(R.id.userItemToolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
+
         //configure tabs
         viewPager = findViewById(R.id.viewPager)
         addTabs()
