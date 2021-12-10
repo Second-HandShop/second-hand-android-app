@@ -1,4 +1,4 @@
-package com.android.secondhand
+package com.android.secondhand.homepage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
+import com.android.secondhand.editPage.ItemEditPageActivity
+import com.android.secondhand.R
+import com.android.secondhand.showPage.ItemShowPageActivity
 import com.android.secondhand.useritems.UserItems
 import com.cloudinary.android.MediaManager
 import com.google.android.material.navigation.NavigationView
@@ -38,7 +41,10 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         // set up Navigation Drawer Menu
         drawerLayout = findViewById(R.id.drawer_layout)
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout,
+            R.string.nav_open,
+            R.string.nav_close
+        )
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState();
@@ -109,7 +115,7 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.to_be_deleted -> {
-                val intent = Intent(this, ItemEditPageActivity::class.java)
+                val intent = Intent(this, ItemShowPageActivity::class.java)
                 startActivity(intent)
             }
             R.id.userItems -> {

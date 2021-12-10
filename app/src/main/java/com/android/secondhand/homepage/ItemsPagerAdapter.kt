@@ -1,4 +1,4 @@
-package com.android.secondhand
+package com.android.secondhand.homepage
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

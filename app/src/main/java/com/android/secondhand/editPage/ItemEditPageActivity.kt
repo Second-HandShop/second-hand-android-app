@@ -1,4 +1,4 @@
-package com.android.secondhand
+package com.android.secondhand.editPage
 
 import android.Manifest
 import android.app.AlertDialog
@@ -46,8 +46,8 @@ import io.swagger.server.models.Item
 import io.swagger.server.models.ItemResource
 import org.json.JSONObject
 
-
-class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRecyclerViewAdapter.OnImageClickFromAdapter {
+class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
+    ImagesRecyclerViewAdapter.OnImageClickFromAdapter {
 
     val IMAGE = 1
     val VIDEO = 2
@@ -140,6 +140,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
                 selectVideo()
             }
             R.id.postItem -> {
+
                 uploadToCloudinary()
             }
         }

@@ -8,6 +8,7 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        android:paddingLeft="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,4 +25,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabLayout"
         android:padding="16dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:fabSize="mini"
+        android:src="@drawable/ic_outline_edit_24"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

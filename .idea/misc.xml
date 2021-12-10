@@ -3,14 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="../../../../../../layout/custom_preview.xml" value="0.2598958333333333" />
-        <entry key="app/src/main/res/layout/activity_home_page.xml" value="0.2625" />
-        <entry key="app/src/main/res/layout/activity_image_edit_page.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/activity_item_edit_page.xml" value="0.11458333333333333" />
-        <entry key="app/src/main/res/layout/activity_user_items.xml" value="0.22010869565217392" />
-        <entry key="app/src/main/res/layout/fragment_items.xml" value="0.2625" />
-        <entry key="app/src/main/res/layout/fragment_user_item.xml" value="0.21603260869565216" />
-        <entry key="app/src/main/res/menu/navigation_menu.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.29025641025641025" />
+        <entry key="app/src/main/res/layout/activity_home_page.xml" value="0.1096757852077001" />
+        <entry key="app/src/main/res/layout/activity_item_edit_page.xml" value="0.1096757852077001" />
+        <entry key="app/src/main/res/layout/activity_show_page.xml" value="0.11423505572441743" />
+        <entry key="app/src/main/res/layout/activity_user_items.xml" value="0.13551165146909827" />
+        <entry key="app/src/main/res/layout/fragment_user_item.xml" value="0.11018237082066869" />
+        <entry key="app/src/main/res/layout/navigation_menu_header.xml" value="0.1096757852077001" />
       </map>
     </option>
   </component>
