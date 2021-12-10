@@ -1,12 +1,12 @@
-package com.android.secondhand
+package com.android.secondhand.editPage
 
 import android.graphics.Bitmap
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.secondhand.R
 
 class ImagesRecyclerViewAdapter(val items: List<Bitmap>): RecyclerView.Adapter<ImagesRecyclerViewAdapter.ImageViewHolder>()  {
 

@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.android.secondhand.HomePageActivity
+import com.android.secondhand.homepage.HomePageActivity
 import com.android.secondhand.R
 import com.google.firebase.auth.FirebaseAuth
 

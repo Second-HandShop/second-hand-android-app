@@ -1,4 +1,4 @@
-package com.android.secondhand
+package com.android.secondhand.editPage
 
 import android.Manifest
 import android.app.AlertDialog
@@ -34,10 +34,11 @@ import java.lang.Exception
 import android.widget.ArrayAdapter
 
 import android.widget.Spinner
+import com.android.secondhand.R
 
 
-
-class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRecyclerViewAdapter.OnImageClickFromAdapter {
+class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
+    ImagesRecyclerViewAdapter.OnImageClickFromAdapter {
 
     val IMAGE = 1
     val VIDEO = 2
@@ -73,7 +74,9 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener, ImagesRe
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         //static add_new_image icon stored in drawer folder
-        addImageIconBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.add_img_icon)
+        addImageIconBitmap = BitmapFactory.decodeResource(this.getResources(),
+            R.drawable.add_img_icon
+        )
         imagesBitmap.add(addImageIconBitmap)
 
         // set up recycler view

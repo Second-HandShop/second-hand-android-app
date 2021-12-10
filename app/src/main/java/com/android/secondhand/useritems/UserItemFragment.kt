@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.secondhand.ItemsRecyclerViewAdapter
+import com.android.secondhand.homepage.ItemsRecyclerViewAdapter
 import com.android.secondhand.R
 import com.android.secondhand.apis.Constant
 import com.android.secondhand.apis.GsonRequest

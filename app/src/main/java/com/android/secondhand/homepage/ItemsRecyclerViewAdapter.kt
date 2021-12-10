@@ -1,4 +1,4 @@
-package com.android.secondhand
+package com.android.secondhand.homepage
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.secondhand.R
 import com.android.secondhand.apis.Constant
 import com.squareup.picasso.Picasso
 import io.swagger.server.models.Item
