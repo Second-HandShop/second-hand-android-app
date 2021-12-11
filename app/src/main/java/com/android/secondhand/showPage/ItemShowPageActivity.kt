@@ -32,6 +32,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.util.Util
 import com.cloudinary.Transformation
+import com.google.android.exoplayer2.SimpleExoPlayer
 
 class ItemShowPageActivity : AppCompatActivity() {
 
@@ -39,7 +40,7 @@ class ItemShowPageActivity : AppCompatActivity() {
     lateinit var adapter: ImageSliderAdapter
     lateinit var sliderView: SliderView
     lateinit var scrollView: NestedScrollView
-    var player: ExoPlayer? = null
+//    var player: ExoPlayer? = null
     var itemVideoUri: String? = null
     var itemImages: ArrayList<String> = ArrayList()
 
@@ -54,7 +55,6 @@ class ItemShowPageActivity : AppCompatActivity() {
         getItemImages()
         getItemVideo()
         bindItemData()
-
 
 
         // set up collapsing toolbar
@@ -125,7 +125,7 @@ class ItemShowPageActivity : AppCompatActivity() {
         itemVideoUri?.let { initializePlayer(it) }
     }
 
-    fun initializePlayer(uri: String) {
+    fun initializePlayer(uri: String){
         // Create a default TrackSelector
         val bandwidthMeter: BandwidthMeter = DefaultBandwidthMeter()
         val videoTrackSelectionFactory: TrackSelection.Factory =
@@ -155,14 +155,8 @@ class ItemShowPageActivity : AppCompatActivity() {
 
         // Prepare the player with the source.
         player.prepare(videoSource)
+
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (player!=null) {
-            player!!.release();
-            player = null;
-        }
-    }
 
 }

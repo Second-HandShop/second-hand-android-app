@@ -124,8 +124,7 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.to_be_deleted -> {
-                val intent = Intent(this, ItemShowPageActivity::class.java)
-                startActivity(intent)
+
             }
             R.id.userItems -> {
                 val intent = Intent(this, UserItems::class.java)

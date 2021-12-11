@@ -162,7 +162,6 @@
                 android:background="@drawable/layout_bottom_border"
                 app:cardCornerRadius="6dp">
 
-
                 <com.google.android.exoplayer2.ui.PlayerView
                     android:id="@+id/exoplayer"
                     android:layout_width="match_parent"
