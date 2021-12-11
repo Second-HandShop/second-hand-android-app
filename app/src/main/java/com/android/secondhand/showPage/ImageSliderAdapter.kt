@@ -34,10 +34,6 @@ class ImageSliderAdapter(val mSliderItems: ArrayList<String>, context: Context) 
         val url = sliderItem
         Picasso.get().load(url).error(R.mipmap.ic_launcher).into(viewHolder.imageViewBackground)
 
-        viewHolder.itemView.setOnClickListener{
-            Toast.makeText(context, "This is item in position $position", Toast.LENGTH_SHORT)
-                .show()
-        }
     }
 
     override fun getCount(): Int {
