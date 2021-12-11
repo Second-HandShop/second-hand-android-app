@@ -125,7 +125,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         //get the spinner from the xml.
         val dropdown = findViewById<Spinner>(R.id.item_category)
         //create a list of items for the spinner.
-        val items = arrayOf("Household", "Furniture", "Books & Supplies", "Electronics", "Cars")
+        val items = arrayOf("Household", "Furniture", "Books and Supplies", "Electronics", "Cars")
         //create an adapter to describe how the items are displayed, adapters are used in several places in android.
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
         //set the spinners adapter to the previously created one.
@@ -157,7 +157,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'")
         val currentDateAndTime: String = simpleDateFormat.format(Date());
         //TODO: get user from firebase
-        var userId = "bhatttrahul712@gmail.com"
+        var userId = Constant.loggedInUserId
 
         val item = Item(
             name = itemName.text.toString(),

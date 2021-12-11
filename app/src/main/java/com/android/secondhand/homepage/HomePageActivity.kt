@@ -72,7 +72,7 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
 
 
-        val categories = listOf<String>("All", "Household", "Furniture", "Books & Supplies", "Electronics", "Cars")
+        val categories = listOf<String>("All", "Household", "Furniture", "Books and Supplies", "Electronics", "Cars")
 //        "Clothing & Shoes", "Sports & Outdoors", "Accessories", "Pet Supplies", "Musical Instruments", "Games & Toys", "Others")
 
         val tabs = findViewById<TabLayout>(R.id.tabs_container)
@@ -92,7 +92,7 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         searchBar.setOnQueryTextListener(
             object: SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    (viewPagerAdapter.getItem(viewPager.currentItem))?.updateData(query)
+                    (viewPagerAdapter.getItem(viewPager.currentItem))?.updateData()
                     return false
                 }
 

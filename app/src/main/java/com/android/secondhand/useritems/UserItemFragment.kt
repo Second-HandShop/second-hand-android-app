@@ -53,7 +53,7 @@ class UserItemFragment : Fragment() {
         // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_user_item, container, false)
         //:TODO uncomment the code on the next line fetch from firebase
-        currentUserName = "bhatttrahul712@gmail.com"//auth.currentUser?.displayName
+        currentUserName = Constant.loggedInUserId//auth.currentUser?.displayName
 
         pullToRefresh = rootView.findViewById(R.id.pullToRefresh)
         when (itemType) {

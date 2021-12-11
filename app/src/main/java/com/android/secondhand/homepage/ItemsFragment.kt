@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -32,14 +33,13 @@ class ItemsFragment : Fragment() {
     var items = ArrayList<Item>()
     lateinit var auth: FirebaseAuth
     lateinit var currentUserName: String
-    lateinit var searchString: String
     lateinit var pullToRefresh: SwipeRefreshLayout
+    lateinit var searchBar: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             tab = categories[ it.getInt("TAB_POSITION") ]
-            searchString = it.getString("SEARCH_STRING").toString()
         }
     }
 
@@ -47,13 +47,15 @@ class ItemsFragment : Fragment() {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_items, container, false)
         //:TODO uncomment the code on the next line fetch from firebase
-        currentUserName = "bhatttrahul712@gmail.com"//auth.currentUser?.displayName
+        currentUserName = Constant.loggedInUserId//auth.currentUser?.displayName
 
-        updateData(searchString)
+        searchBar = activity?.findViewById(R.id.searchBar)!!
+        updateData()
 
-         pullToRefresh = root.findViewById(R.id.pullToRefresh)
+
+        pullToRefresh = root.findViewById(R.id.pullToRefresh)
         pullToRefresh.setOnRefreshListener {
-            updateData(searchString) // your code
+            updateData() // your code
             pullToRefresh.isRefreshing = true
         }
 
@@ -79,13 +81,13 @@ class ItemsFragment : Fragment() {
             ItemsFragment().apply {
                 arguments = Bundle().apply {
                     putInt("TAB_POSITION", position)
-                    putString("SEARCH_STRING", searchString)
                 }
             }
     }
 
 
-    fun updateData(searchString: String?) {
+    fun updateData() {
+        items.clear()
         val requestQueue: RequestQueue = Volley.newRequestQueue(activity)
 
         var url = Constant.API_BASE_ADDRESS
@@ -93,6 +95,11 @@ class ItemsFragment : Fragment() {
         if(!tab.equals("all", ignoreCase = true)) {
             url = "$url?categories=$tab"
             questionMarkAdded = true
+        }
+
+        var searchString : String? = null
+        if (searchBar != null) {
+            searchString = searchBar.query.toString()
         }
 
         if(searchString != null && searchString.isNotBlank()) {
@@ -111,8 +118,8 @@ class ItemsFragment : Fragment() {
             { response ->
                 System.out.println("Response: %s".format(response.toString()))
                 val itemsForUserMap = response.userIdsToIdsMap
-                if (itemsForUserMap != null) {
-                    items = itemsForUserMap[currentUserName]?.toCollection(ArrayList()) ?: arrayListOf()
+                itemsForUserMap?.values?.map { userItems ->
+                    items.addAll(userItems.toCollection(ArrayList()))
                 }
                 recyclerViewAdapter = ItemsRecyclerViewAdapter(items)
                 recyclerView = root.findViewById<RecyclerView>(R.id.items_container)
