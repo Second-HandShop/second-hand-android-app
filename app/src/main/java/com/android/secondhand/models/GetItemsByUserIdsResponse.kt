@@ -11,7 +11,7 @@
 */
 package io.swagger.server.models
 
-import io.swagger.server.models.Item
+import com.android.secondhand.models.Item
 import java.io.Serializable
 
 /**

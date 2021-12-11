@@ -44,7 +44,7 @@ import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
-import io.swagger.server.models.Item
+import com.android.secondhand.models.Item
 import io.swagger.server.models.ItemResource
 import org.json.JSONObject
 

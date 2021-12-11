@@ -1,5 +1,6 @@
 package com.android.secondhand.homepage
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,14 +13,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.secondhand.R
 import com.android.secondhand.apis.Constant
 import com.android.secondhand.apis.GsonRequest
+import com.android.secondhand.showPage.ItemShowPageActivity
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import io.swagger.server.models.GetItemsByUserIdsResponse
-import io.swagger.server.models.Item
+import com.android.secondhand.models.Item
+import java.io.Serializable
 
 
-class ItemsFragment : Fragment() {
+class ItemsFragment : Fragment(), ItemsRecyclerViewAdapter.ShowItemClickListener {
 
     // static categories
     val categories = listOf<String>("All", "Household", "Furniture", "Books and Supplies", "Electronics", "Cars")
@@ -56,6 +59,8 @@ class ItemsFragment : Fragment() {
             updateData(searchString) // your code
             pullToRefresh.isRefreshing = true
         }
+
+
 
         // filter posts by category (tab)
 //        if(tab.equals("All")){
@@ -115,10 +120,14 @@ class ItemsFragment : Fragment() {
                     items = itemsForUserMap[currentUserName]?.toCollection(ArrayList()) ?: arrayListOf()
                 }
                 recyclerViewAdapter = ItemsRecyclerViewAdapter(items)
+
                 recyclerView = root.findViewById<RecyclerView>(R.id.items_container)
                 recyclerView.layoutManager = GridLayoutManager(this.context, 2)
                 recyclerView.adapter = recyclerViewAdapter
                 pullToRefresh.isRefreshing = false
+
+                // set listener for ItemsRecyclerViewAdapter
+                recyclerViewAdapter.setListener(this)
             },
             { error ->
                 System.out.println("That did not work : \n" + error)
@@ -129,5 +138,12 @@ class ItemsFragment : Fragment() {
             }
         )
         requestQueue.add(gsonRequest)
+    }
+
+    // from ItemsRecyclerViewAdapter
+    override fun onItemClick(item: Item) {
+        val intent = Intent(this.activity, ItemShowPageActivity::class.java)
+        intent.putExtra("ITEM", item as Serializable)
+        startActivity(intent)
     }
 }

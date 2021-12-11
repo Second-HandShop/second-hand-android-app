@@ -16,7 +16,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import io.swagger.server.models.GetItemsByUserIdsResponse
-import io.swagger.server.models.Item
+import com.android.secondhand.models.Item
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,14 +55,14 @@ class UserItemFragment : Fragment() {
 
         when (itemType) {
             "IN_THE_MARKET" -> {
-                val filter: (Item) -> Boolean = {item -> item.soldInfo == null}
+                val filter: (Item) -> Boolean = { item -> item.soldInfo == null}
                 fetchItemsForUserFilteredWith(filter)
             }
             "BOUGHT" -> {
                 fetchBoughtItemsForUser()
             }
             "SOLD" -> {
-                val filter: (Item) -> Boolean = {item -> item.soldInfo != null}
+                val filter: (Item) -> Boolean = { item -> item.soldInfo != null}
                 fetchItemsForUserFilteredWith(filter)
             }
         }

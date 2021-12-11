@@ -11,6 +11,8 @@
 */
 package io.swagger.server.models
 
+import java.io.Serializable
+
 
 /**
  * 
@@ -22,7 +24,7 @@ data class ItemResource (
     val name: kotlin.String? = null,
     val resourceType: ItemResource.ResourceType? = null,
     val resourceLink: kotlin.String? = null
-) {
+):Serializable {
 
     /**
     * 
