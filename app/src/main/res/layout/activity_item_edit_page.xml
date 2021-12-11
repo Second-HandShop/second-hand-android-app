@@ -83,7 +83,9 @@
         android:layout_height="wrap_content"
         android:text="Add item video - up to 50mov\nLong press to delete it"
         android:padding="8dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/layout_bottom_border"/>
 
     <VideoView
         android:id="@+id/item_video"
