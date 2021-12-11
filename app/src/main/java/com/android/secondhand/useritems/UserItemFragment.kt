@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.secondhand.homepage.ItemsRecyclerViewAdapter
 import com.android.secondhand.R
 import com.android.secondhand.apis.Constant
@@ -36,6 +37,7 @@ class UserItemFragment : Fragment() {
     var items = ArrayList<Item>()
     lateinit var auth: FirebaseAuth
     lateinit var currentUserName: String
+    lateinit var pullToRefresh: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,17 +55,30 @@ class UserItemFragment : Fragment() {
         //:TODO uncomment the code on the next line fetch from firebase
         currentUserName = "bhatttrahul712@gmail.com"//auth.currentUser?.displayName
 
+        pullToRefresh = rootView.findViewById(R.id.pullToRefresh)
         when (itemType) {
             "IN_THE_MARKET" -> {
                 val filter: (Item) -> Boolean = {item -> item.soldInfo == null}
                 fetchItemsForUserFilteredWith(filter)
+                pullToRefresh.setOnRefreshListener {
+                    fetchItemsForUserFilteredWith(filter) // your code
+                    pullToRefresh.isRefreshing = true
+                }
             }
             "BOUGHT" -> {
                 fetchBoughtItemsForUser()
+                pullToRefresh.setOnRefreshListener {
+                    fetchBoughtItemsForUser() // your code
+                    pullToRefresh.isRefreshing = true
+                }
             }
             "SOLD" -> {
                 val filter: (Item) -> Boolean = {item -> item.soldInfo != null}
                 fetchItemsForUserFilteredWith(filter)
+                pullToRefresh.setOnRefreshListener {
+                    fetchItemsForUserFilteredWith(filter) // your code
+                    pullToRefresh.isRefreshing = true
+                }
             }
         }
 
@@ -88,12 +103,14 @@ class UserItemFragment : Fragment() {
                 }
                 items = items.filter(filter) as ArrayList<Item>
                 updateRecylerView()
+                pullToRefresh.isRefreshing = false
             },
             { error ->
                 System.out.println("That did not work : \n" + error)
                 items = arrayListOf()
                 Toast.makeText(activity, "There was a problem retrieving data please retry after sometime",
                     Toast.LENGTH_LONG).show()
+                pullToRefresh.isRefreshing = false
             }
         )
         requestQueue.add(gsonRequest)
@@ -116,12 +133,14 @@ class UserItemFragment : Fragment() {
                     items = itemsForUserMap[currentUserName]?.toCollection(ArrayList()) ?: arrayListOf()
                 }
                 updateRecylerView()
+                pullToRefresh.isRefreshing = false
             },
             { error ->
                 System.out.println("That did not work : \n" + error)
                 items = arrayListOf()
                 Toast.makeText(activity, "There was a problem retrieving data please retry after sometime",
                     Toast.LENGTH_LONG).show()
+                pullToRefresh.isRefreshing = false
             }
         )
         requestQueue.add(gsonRequest)
