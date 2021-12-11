@@ -45,11 +45,29 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.android.secondhand.models.Item
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelection
+import com.google.android.exoplayer2.trackselection.TrackSelector
+import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.upstream.BandwidthMeter
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
 import io.swagger.server.models.ItemResource
 import org.json.JSONObject
 
 class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
-    ImagesRecyclerViewAdapter.OnImageClickFromAdapter {
+    ImagesRecyclerViewAdapter.OnImageClickFromAdapter,
+    PostedImagesRecyclerViewAdapter.OnImageClickFromAdapter{
 
     val IMAGE = 1
     val VIDEO = 2
@@ -58,7 +76,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
     val REQUEST_VIDEO_GALLERY = 3
     val REQUEST_VIDEO_CAPTURE = 4
 
-    lateinit var spinner: Spinner
+    lateinit var dropdown: Spinner
     lateinit var videoView: VideoView
     lateinit var addImageIconBitmap : Bitmap //static add_new_image icon
 
@@ -76,6 +94,15 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
     lateinit var recyclerViewAdapter: ImagesRecyclerViewAdapter
     lateinit var progressWrapper: FrameLayout
     lateinit var postItemButton: Button
+
+    // for modifying/updating the item detail
+    lateinit var item: Item
+    var itemVideoUri : String? = null
+    var itemImagesUri: ArrayList<String> = ArrayList()
+    lateinit var videoPlayer : PlayerView
+    lateinit var postedRecyclerView : RecyclerView
+    lateinit var postedRecyclerViewAdapter : PostedImagesRecyclerViewAdapter
+//    var player: ExoPlayer?  = null
 
     //saving the audios and videos after the upload to cloudinary
     val itemResources = java.util.ArrayList<ItemResource>();
@@ -103,8 +130,62 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         recyclerViewAdapter.setClickListener(this)
         recyclerView.adapter = recyclerViewAdapter
 
+
+        // retrieve the Item passed from UserItemFragment
+        item = intent.extras?.get("ITEM") as Item
+
         // item video container
         videoView = findViewById<VideoView>(R.id.item_video)
+
+        //get the spinner from the xml.
+        dropdown = findViewById<Spinner>(R.id.item_category)
+        //create a list of items for the spinner.
+        val items = arrayOf("Household", "Furniture", "Books & Supplies", "Electronics", "Cars")
+        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
+        //set the spinners adapter to the previously created one.
+        dropdown.adapter = adapter
+
+
+        if(item != null){
+            // fill up the item details
+            findViewById<EditText>(R.id.itemName).setText(item.name)
+            findViewById<EditText>(R.id.itemPrice).setText(item.price.toString())
+            findViewById<EditText>(R.id.itemDescription).setText(item.description)
+
+            // retrieve the posted images
+            getItemImages()
+            getItemVideo()
+
+            // set the RecyclerView for posted images to be visible
+            postedRecyclerView = findViewById<RecyclerView>(R.id.posted_images_container)
+            postedRecyclerView.visibility = View.VISIBLE
+            postedRecyclerViewAdapter = PostedImagesRecyclerViewAdapter(itemImagesUri)
+            postedRecyclerViewAdapter.setClickListener(this)
+            postedRecyclerView.adapter = postedRecyclerViewAdapter
+            postedRecyclerView.layoutManager = GridLayoutManager(this, 3)
+
+
+            // retrieve the posted video
+            itemVideoUri?.let{
+                // hide the add_new_image icon
+                videoPlayer = findViewById(R.id.exoplayer)
+                findViewById<LinearLayout>(R.id.video_player_container).visibility = View.VISIBLE
+                videoView.visibility = View.GONE
+                initializePlayer(it)
+
+                //set up long click handler for deleting the video
+                findViewById<Button>(R.id.delete_posted_video).setOnClickListener {
+                    deletePostedVideo()
+                }
+            }
+
+            // retrieve the item category
+            val spinnerPosition: Int = adapter.getPosition(item.category)
+            dropdown.setSelection(spinnerPosition)
+
+        }
+
 
         // click to add in video
         videoView.setOnClickListener(this)
@@ -120,16 +201,8 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         postItemButton = findViewById(R.id.postItem)
         postItemButton.setOnClickListener(this)
 
-        // set up spinner for item categories
 
-        //get the spinner from the xml.
-        val dropdown = findViewById<Spinner>(R.id.item_category)
-        //create a list of items for the spinner.
-        val items = arrayOf("Household", "Furniture", "Books and Supplies", "Electronics", "Cars")
-        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
-        //set the spinners adapter to the previously created one.
-        dropdown.adapter = adapter
+
 
         //start posting... progress on screen
         progressWrapper = findViewById(R.id.progressBarWrapper)
@@ -222,8 +295,18 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
     // Define in ImagesRecyclerViewAdapter
     // handlers for image click events
     override fun onImageLongClick(position: Int) {
-        if(position != imagesBitmap.size - 1)
+//        if(position != imagesBitmap.size - 1)
+//            deleteImage(position)
+        if(imagesBitmap[position] != addImageIconBitmap){
             deleteImage(position)
+        }
+
+    }
+
+    // Define in PostedImagesRecyclerViewAdapter
+    // handlers for posted image click events
+    override fun onPostedImageLongClick(position: Int) {
+        deletePostedImage(position)
     }
 
 
@@ -234,6 +317,14 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         videoView.setVideoURI(videoViewUri)
         videoView.seekTo(1)
     }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        if (player!=null) {
+//            player!!.release();
+//            player = null;
+//        }
+//    }
 
 
     // handle "CAPTURE" and "SELECT FROM GALLERY" activity for image/video
@@ -287,7 +378,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
                     imagesBitmap.set(replaceImageAtPosition, bitmap!!)
                 }
 
-                if(imagesBitmap.size > 6) imagesBitmap.removeAt(imagesBitmap.size - 1)
+                if(imagesBitmap.size + itemImagesUri.size > 6) imagesBitmap.removeAt(imagesBitmap.size - 1)
                 recyclerViewAdapter.notifyDataSetChanged()
                 recyclerView.swapAdapter(recyclerViewAdapter, true)
             }
@@ -299,11 +390,21 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
     // pop up AlertDialog to show options for picking images
     private fun selectImage() {
 
+        val builder= AlertDialog.Builder(this)
+        if(imagesBitmap.size + itemImagesUri.size > 6){
+            builder.setMessage("The number of images has reached to the limit...")
+            builder.setNegativeButton("Okay") {
+                    dialog, id -> dialog.cancel()
+            }
+            builder.create().show()
+            return
+        }
+
         // check for permission
         if(checkForApplicationPermission()){
 
             val options = arrayOf<CharSequence>("Take Photo", "Choose from Gallery", "Cancel")
-            val builder= AlertDialog.Builder(this)
+
             builder.setTitle("Add Photo!")
 
             builder.setItems(options, DialogInterface.OnClickListener { dialog, item ->
@@ -367,15 +468,16 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
     }
 
 
+
     // pop up AlertDialog to show options for picking images
     private fun selectVideo() {
+
         // check for camera & File and Meida permission
         if(checkForApplicationPermission()){
 
             val options = arrayOf<CharSequence>("Make a Video", "Choose from Gallery", "Cancel")
             val builder= AlertDialog.Builder(this)
             builder.setTitle("Add Video!")
-
             builder.setItems(options, DialogInterface.OnClickListener { dialog, item ->
                 if (options[item].equals("Make a Video")) {
                     Intent(MediaStore.ACTION_VIDEO_CAPTURE).also { takeVideoIntent ->
@@ -411,13 +513,18 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         builder.setItems(options, DialogInterface.OnClickListener { dialog, item ->
             if (options[item].equals("Delete")) {
 
-                imagesBitmap.removeAt(position)
+                if(imagesBitmap[position] != addImageIconBitmap){
+                    imagesBitmap.removeAt(position)
+                    if(position == 0) imagesBitmap.add(addImageIconBitmap)
+                }
+
                 imagesAbosulePath.removeAt(position)
-//                imagesAbosulePath = ArrayList<String>(imagesAbosulePath.filterNotNull())
-//
-                Log.i("tab", "after deleting one.. imagesAbsolutePath=${imagesAbosulePath.size}")
+
                 // if not reaching the total limit of 6, show the static add_new_image icon at the end
-                if(imagesBitmap.get(imagesBitmap.size - 1) != addImageIconBitmap) imagesBitmap.add(imagesBitmap.size, addImageIconBitmap)
+                if(imagesBitmap.get(imagesBitmap.size - 1) != addImageIconBitmap
+                    && itemImagesUri.size + imagesBitmap.size < 6) {
+                        imagesBitmap.add(imagesBitmap.size, addImageIconBitmap)
+                }
                 // refresh the RecyclerView
                 recyclerViewAdapter.notifyDataSetChanged()
                 recyclerView.swapAdapter(recyclerViewAdapter, true)
@@ -425,6 +532,53 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
             dialog.dismiss()
         })
         builder.show()
+    }
+
+    //pop up AlertDialog to show options to confirm or cancel deleting posted image
+    fun deletePostedImage(position : Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Delete Image?")
+        builder.setPositiveButton("Delete") { dialog, item ->
+
+            itemImagesUri.removeAt(position)
+            postedRecyclerViewAdapter.notifyDataSetChanged()
+            postedRecyclerView.swapAdapter(postedRecyclerViewAdapter, true)
+
+            // hide the RecyclerView for posted images
+            if(itemImagesUri.size == 0)
+                postedRecyclerView.visibility = View.INVISIBLE
+
+
+            //add in add_new_image icon
+            if(imagesBitmap.get(imagesBitmap.size - 1) != addImageIconBitmap
+                && itemImagesUri.size + imagesBitmap.size < 6){
+                imagesBitmap.add(imagesBitmap.size, addImageIconBitmap)
+                // refresh the RecyclerView
+                recyclerViewAdapter.notifyDataSetChanged()
+                recyclerView.swapAdapter(recyclerViewAdapter, true)
+            }
+
+        }
+        builder.setNegativeButton("Cancel") {
+                dialog, id -> dialog.cancel()
+        }
+        builder.create().show()
+    }
+
+    //pop up AlertDialog to show options to confirm or cancel deleting posted video
+    fun deletePostedVideo(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Delete Image?")
+        builder.setPositiveButton("Delete") { dialog, item ->
+            videoViewUri = null
+            findViewById<LinearLayout>(R.id.video_player_container).visibility = View.GONE
+
+            videoView.visibility = View.VISIBLE
+        }
+        builder.setNegativeButton("Cancel") {
+                dialog, id -> dialog.cancel()
+        }
+        builder.create().show()
     }
 
 
@@ -604,4 +758,54 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
             .show()
     }
 
+    // retrieving the details of a posted item
+    fun getItemImages(){
+        item.resources?.filter{
+            it.resourceType!!.toString().equals("image", ignoreCase = true)
+        }!!.map {
+            itemImagesUri.add(it.resourceLink!!)
+        }
+    }
+
+
+    fun initializePlayer(uri: String) {
+        // Create a default TrackSelector
+        val bandwidthMeter: BandwidthMeter = DefaultBandwidthMeter()
+        val videoTrackSelectionFactory: TrackSelection.Factory =
+            AdaptiveTrackSelection.Factory(bandwidthMeter)
+        val trackSelector: TrackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
+
+        //Initialize the player
+        val player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
+
+        //Initialize simpleExoPlayerView
+        val playerView = findViewById<PlayerView>(R.id.exoplayer)
+        playerView.player = player
+
+        // Produces DataSource instances through which media data is loaded.
+        val dataSourceFactory: DataSource.Factory =
+            DefaultDataSourceFactory(this, Util.getUserAgent(this, "CloudinaryExoplayer"))
+
+        // Produces Extractor instances for parsing the media data.
+        val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
+
+        // This is the MediaSource representing the media to be played.
+        val videoUri: Uri = Uri.parse(uri)
+        val videoSource: MediaSource = ExtractorMediaSource(
+            videoUri,
+            dataSourceFactory, extractorsFactory, null, null
+        )
+
+        // Prepare the player with the source.
+        player!!.prepare(videoSource)
+
+    }
+
+    fun getItemVideo(){
+        item.resources?.filter{
+            it.resourceType!!.toString().equals("video", ignoreCase = true)
+        }!!.map {
+            itemVideoUri = it.resourceLink
+        }
+    }
 }

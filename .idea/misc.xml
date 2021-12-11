@@ -8,7 +8,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.29025641025641025" />
         <entry key="app/src/main/res/layout/activity_home_page.xml" value="0.1096757852077001" />
         <entry key="app/src/main/res/layout/activity_image_slider_layout_item.xml" value="0.13551165146909827" />
-        <entry key="app/src/main/res/layout/activity_item_edit_page.xml" value="0.1096757852077001" />
+        <entry key="app/src/main/res/layout/activity_item_edit_page.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_show_page.xml" value="0.11423505572441743" />
         <entry key="app/src/main/res/layout/activity_user_items.xml" value="0.13551165146909827" />
         <entry key="app/src/main/res/layout/fragment_user_item.xml" value="0.11018237082066869" />

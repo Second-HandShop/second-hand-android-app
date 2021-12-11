@@ -1,5 +1,6 @@
 package com.android.secondhand.useritems
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,11 +14,13 @@ import com.android.secondhand.homepage.ItemsRecyclerViewAdapter
 import com.android.secondhand.R
 import com.android.secondhand.apis.Constant
 import com.android.secondhand.apis.GsonRequest
+import com.android.secondhand.editPage.ItemEditPageActivity
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import io.swagger.server.models.GetItemsByUserIdsResponse
 import com.android.secondhand.models.Item
+import com.android.secondhand.showPage.ItemShowPageActivity
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,12 +31,12 @@ private const val ITEM_TYPE = "ITEM_TYPE"
  * Use the [UserItemFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class UserItemFragment : Fragment() {
+class UserItemFragment : Fragment(), UserItemsRecyclerViewAdapter.ShowUserItemClickListener {
     //"IN_THE_MARKET","BOUGHT","SOLD"
     private var itemType: String? = null
     private lateinit var rootView: View
     lateinit var recyclerView: RecyclerView
-    lateinit var recyclerViewAdapter: ItemsRecyclerViewAdapter
+    lateinit var recyclerViewAdapter: UserItemsRecyclerViewAdapter
     var items = ArrayList<Item>()
     lateinit var auth: FirebaseAuth
     lateinit var currentUserName: String
@@ -147,7 +150,8 @@ class UserItemFragment : Fragment() {
     }
 
     private fun updateRecylerView() {
-        recyclerViewAdapter = ItemsRecyclerViewAdapter(items)
+        recyclerViewAdapter = UserItemsRecyclerViewAdapter(items)
+        recyclerViewAdapter.setListener(this)
         recyclerView = rootView.findViewById(R.id.items_container)
         recyclerView.layoutManager = GridLayoutManager(this.context, 2)
         recyclerView.adapter = recyclerViewAdapter
@@ -169,5 +173,21 @@ class UserItemFragment : Fragment() {
                     putString(ITEM_TYPE, type)
                 }
             }
+    }
+
+    // from UserItemsRecyclerViewAdapter
+    override fun onItemClick(item: Item) {
+        when(itemType){
+            "IN_THE_MARKET" -> {
+                val intent = Intent(this.activity, ItemEditPageActivity::class.java)
+                intent.putExtra("ITEM", item)
+                startActivity(intent)
+            }
+            "BOUGHT", "SOLD" -> {
+                val intent = Intent(this.activity, ItemShowPageActivity::class.java)
+                intent.putExtra("ITEM", item)
+                startActivity(intent)
+            }
+        }
     }
 }
