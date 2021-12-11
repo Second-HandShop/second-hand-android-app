@@ -62,6 +62,7 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.google.firebase.auth.FirebaseAuth
 import io.swagger.server.models.ItemResource
 import org.json.JSONObject
 
@@ -102,6 +103,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
     lateinit var videoPlayer : PlayerView
     lateinit var postedRecyclerView : RecyclerView
     lateinit var postedRecyclerViewAdapter : PostedImagesRecyclerViewAdapter
+    lateinit var auth: FirebaseAuth
 //    var player: ExoPlayer?  = null
 
     //saving the audios and videos after the upload to cloudinary
@@ -202,10 +204,10 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         postItemButton.setOnClickListener(this)
 
 
-
-
         //start posting... progress on screen
         progressWrapper = findViewById(R.id.progressBarWrapper)
+
+        auth  = FirebaseAuth.getInstance()
     }
 
 
@@ -230,26 +232,50 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'")
         val currentDateAndTime: String = simpleDateFormat.format(Date());
         //TODO: get user from firebase
-        var userId = Constant.LOGGED_IN_USER_ID
+        var userId = auth.currentUser?.email.toString()//Constant.LOGGED_IN_USER_ID
 
-        val item = Item(
-            name = itemName.text.toString(),
-            description = description.text.toString(),
-            category = category.selectedItem.toString(),
-            addedOn = currentDateAndTime,
-            price = price.text.toString().toFloat(),
-            soldInfo = null,
-            userId = userId,
-            resources = itemResources.toTypedArray()
-        )
+        var tempItemResources : List<ItemResource> = mutableListOf()
+        if(item != null) {
+            tempItemResources = item!!.resources?.filter { itemResource ->
+                itemImagesUri.contains(itemResource.resourceLink) || itemVideoUri.equals(itemResource.resourceLink)
+            }!!
+        }
 
+        itemResources.addAll(tempItemResources)
 
-        val jsonPostData = JSONObject(Gson().toJson(item))
+        val newItem = if(item == null) {
+            Item(
+                name = itemName.text.toString(),
+                description = description.text.toString(),
+                category = category.selectedItem.toString(),
+                addedOn = currentDateAndTime,
+                price = price.text.toString().toFloat(),
+                soldInfo = null,
+                userId = userId,
+                resources = itemResources.toTypedArray()
+            )
+        } else {
+            Item(
+                id = item!!.id,
+                name = itemName.text.toString(),
+                description = description.text.toString(),
+                category = category.selectedItem.toString(),
+                addedOn = currentDateAndTime,
+                price = price.text.toString().toFloat(),
+                soldInfo = null,
+                userId = userId,
+                resources = itemResources.toTypedArray()
+            )
+        }
+
+        val httpMethod = if (item != null) Request.Method.PUT else Request.Method.POST
+
+        val jsonPostData = JSONObject(Gson().toJson(newItem))
 
         //call post api
         val que = Volley.newRequestQueue(this)
         val req = object: JsonObjectRequest(
-            Request.Method.POST,Constant.API_BASE_ADDRESS,jsonPostData,
+            httpMethod,Constant.API_BASE_ADDRESS,jsonPostData,
             { response ->
                 //end progress loader on screen and show toast message
                 progressWrapper.visibility = View.GONE
@@ -618,7 +644,8 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
                 )
                 itemResources.add(itemResource)
 
-                if(itemResources.size == imagesAbosulePath.size) {
+                if((videoViewUri != null && itemResources.size == imagesAbosulePath.size + 1)
+                    || itemResources.size == imagesAbosulePath.size ) {
                     postItemData()
                 }
             }

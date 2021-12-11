@@ -55,8 +55,10 @@ class UserItemFragment : Fragment(), UserItemsRecyclerViewAdapter.ShowUserItemCl
     ): View? {
         // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_user_item, container, false)
+
+        auth = FirebaseAuth.getInstance()
         //:TODO uncomment the code on the next line fetch from firebase
-        currentUserName = Constant.LOGGED_IN_USER_ID//auth.currentUser?.displayName
+        currentUserName = auth.currentUser?.email.toString()//Constant.LOGGED_IN_USER_ID
 
         pullToRefresh = rootView.findViewById(R.id.pullToRefresh)
         when (itemType) {

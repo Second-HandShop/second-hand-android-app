@@ -34,6 +34,7 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.util.Util
 import com.cloudinary.Transformation
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.firebase.auth.FirebaseAuth
 
 class ItemShowPageActivity : AppCompatActivity() {
 
@@ -90,8 +91,7 @@ class ItemShowPageActivity : AppCompatActivity() {
         val itemDescription= findViewById<TextView>(R.id.itemDescription)
         val itemVideo = findViewById<CardView>(R.id.itemVideo)
 
-        //TODO: get user id from firebase
-        userIdText.text = Constant.LOGGED_IN_USER_ID
+        userIdText.text = item.userId
         itemPrice.setText("$ ${item.price}")
         itemDescription.setText(item.description)
 

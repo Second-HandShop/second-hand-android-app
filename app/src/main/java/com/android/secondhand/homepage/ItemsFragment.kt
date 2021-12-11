@@ -49,8 +49,9 @@ class ItemsFragment : Fragment(), ItemsRecyclerViewAdapter.ShowItemClickListener
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_items, container, false)
+        auth = FirebaseAuth.getInstance()
         //:TODO uncomment the code on the next line fetch from firebase
-        currentUserName = Constant.LOGGED_IN_USER_ID//auth.currentUser?.displayName
+        currentUserName = auth.currentUser?.email.toString()
 
         searchBar = activity?.findViewById(R.id.searchBar)!!
         updateData()
