@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/actionItemSold"
+        android:title="Notify Item Sold"
+        app:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_baseline_notifications_24" />
+    <item
+        android:id="@+id/actionShare"
+        android:title="Share"
+        app:showAsAction="ifRoom|withText"
+        android:icon="@drawable/share_maroon_24"/>
+</menu>

@@ -3,20 +3,20 @@ package com.android.secondhand.useritems
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.android.secondhand.R
 import com.android.secondhand.models.Item
 import com.squareup.picasso.Picasso
 
 
-class UserItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<UserItemsRecyclerViewAdapter.ItemViewHolder>() {
+class UserItemsRecyclerViewAdapter(val items: List<Item>, val itemTypeForUser: String): RecyclerView.Adapter<UserItemsRecyclerViewAdapter.ItemViewHolder>() {
 
     // myListener : ItemsFragment
     var myListener:ShowUserItemClickListener? = null
     interface ShowUserItemClickListener{
         fun onItemClick(item: Item)
+        fun onOverflowMenuClickedFromAdapter(item: Item, view: View)
     }
 
     fun setListener(listener : ShowUserItemClickListener){
@@ -40,10 +40,21 @@ class UserItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<
         val itemImage = itemView.findViewById<ImageView>(R.id.itemImage)
         val itemName = itemView.findViewById<TextView>(R.id.itemName)
         val itemPrice = itemView.findViewById<TextView>(R.id.itemPrice)
-
+        val moreOptionsIcon = itemView.findViewById<Button>(R.id.moreOptions)
+        val moreOptionsWrapper = itemView.findViewById<LinearLayout>(R.id.moreOptionsWrapper)
+        val shareActionProvider = itemView.findViewById<Button>(R.id.shareActionWrapper)
         init{
             itemView.setOnClickListener {
                 myListener?.onItemClick(items[adapterPosition])
+            }
+
+            if(itemTypeForUser == "IN_THE_MARKET") {
+                shareActionProvider.visibility = View.GONE
+                moreOptionsWrapper.visibility = View.VISIBLE
+                moreOptionsIcon.setOnClickListener{
+                    myListener?.onOverflowMenuClickedFromAdapter(items[adapterPosition], it)
+
+                }
             }
         }
 

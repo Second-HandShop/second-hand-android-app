@@ -1,12 +1,18 @@
 package com.android.secondhand.useritems
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.textclassifier.SelectionEvent.ACTION_SHARE
 import android.widget.Toast
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth
 import io.swagger.server.models.GetItemsByUserIdsResponse
 import com.android.secondhand.models.Item
 import com.android.secondhand.showPage.ItemShowPageActivity
+import java.lang.reflect.Method
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -153,7 +160,7 @@ class UserItemFragment : Fragment(), UserItemsRecyclerViewAdapter.ShowUserItemCl
     }
 
     private fun updateRecylerView() {
-        recyclerViewAdapter = UserItemsRecyclerViewAdapter(items)
+        recyclerViewAdapter = UserItemsRecyclerViewAdapter(items,itemType!!)
         recyclerViewAdapter.setListener(this)
         recyclerView = rootView.findViewById(R.id.items_container)
         recyclerView.layoutManager = GridLayoutManager(this.context, 2)
@@ -193,4 +200,110 @@ class UserItemFragment : Fragment(), UserItemsRecyclerViewAdapter.ShowUserItemCl
             }
         }
     }
+
+    override fun onOverflowMenuClickedFromAdapter(item: Item, view: View) {
+        val popup = PopupMenu(this.context!!, view)
+        val menuInflater = popup.menuInflater
+        menuInflater.inflate(R.menu.menu_popup, popup.menu)
+        popup.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.actionItemSold -> {
+                    Toast.makeText(activity, "In item sold",
+                        Toast.LENGTH_LONG).show()
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.actionShare -> {
+                    val intent =  Intent(Intent.ACTION_SEND)
+                    intent.putExtra(Intent.EXTRA_TEXT, item.description)
+                    intent.type = "text/plain"
+                    startActivity(intent)
+                    Toast.makeText(activity, "share",
+                        Toast.LENGTH_LONG).show()
+                    return@setOnMenuItemClickListener true
+                }
+                else ->{
+                    Toast.makeText(activity, "In nothing",
+                        Toast.LENGTH_LONG).show()
+                    return@setOnMenuItemClickListener false
+                }
+            }
+        }
+        // show icon on the popup menu!!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popup.setForceShowIcon(true)
+        }else{
+            try {
+                val fields = popup.javaClass.declaredFields
+                for (field in fields) {
+                    if ("mPopup" == field.name) {
+                        field.isAccessible = true
+                        val menuPopupHelper = field[popup]
+                        val classPopupHelper =
+                            Class.forName(menuPopupHelper.javaClass.name)
+                        val setForceIcons: Method = classPopupHelper.getMethod(
+                            "setForceShowIcon",
+                            Boolean::class.javaPrimitiveType
+                        )
+                        setForceIcons.invoke(menuPopupHelper, true)
+                        break
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        popup.show()
+    }
+
+    /*override fun onOverflowMenuClickedFromAdapter() {
+        val popup = PopupMenu(this.context!!, view)
+        val menuInflater = popup.menuInflater
+        menuInflater.inflate(R.menu.menu_popup, popup.menu)
+        popup.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.actionItemSold -> {
+                    Toast.makeText(activity, "In item sold",
+                        Toast.LENGTH_LONG).show()
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.actionShare -> {
+                    Toast.makeText(activity, "share",
+                        Toast.LENGTH_LONG).show()
+                    return@setOnMenuItemClickListener true
+                }
+                else ->{
+                    Toast.makeText(activity, "In nothing",
+                        Toast.LENGTH_LONG).show()
+                    return@setOnMenuItemClickListener false
+                }
+            }
+        }
+        // show icon on the popup menu!!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popup.setForceShowIcon(true)
+        }else{
+            try {
+                val fields = popup.javaClass.declaredFields
+                for (field in fields) {
+                    if ("mPopup" == field.name) {
+                        field.isAccessible = true
+                        val menuPopupHelper = field[popup]
+                        val classPopupHelper =
+                            Class.forName(menuPopupHelper.javaClass.name)
+                        val setForceIcons: Method = classPopupHelper.getMethod(
+                            "setForceShowIcon",
+                            Boolean::class.javaPrimitiveType
+                        )
+                        setForceIcons.invoke(menuPopupHelper, true)
+                        break
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        popup.show()
+    }*/
 }
