@@ -96,7 +96,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
     lateinit var postItemButton: Button
 
     // for modifying/updating the item detail
-    lateinit var item: Item
+    var item: Item? = null
     var itemVideoUri : String? = null
     var itemImagesUri: ArrayList<String> = ArrayList()
     lateinit var videoPlayer : PlayerView
@@ -132,7 +132,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
 
 
         // retrieve the Item passed from UserItemFragment
-        item = intent.extras?.get("ITEM") as Item
+        item = intent.extras?.get("ITEM") as Item?
 
         // item video container
         videoView = findViewById<VideoView>(R.id.item_video)
@@ -149,9 +149,9 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
 
         if(item != null){
             // fill up the item details
-            findViewById<EditText>(R.id.itemName).setText(item.name)
-            findViewById<EditText>(R.id.itemPrice).setText(item.price.toString())
-            findViewById<EditText>(R.id.itemDescription).setText(item.description)
+            findViewById<EditText>(R.id.itemName).setText(item!!.name)
+            findViewById<EditText>(R.id.itemPrice).setText(item!!.price.toString())
+            findViewById<EditText>(R.id.itemDescription).setText(item!!.description)
 
             // retrieve the posted images
             getItemImages()
@@ -181,7 +181,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
             }
 
             // retrieve the item category
-            val spinnerPosition: Int = adapter.getPosition(item.category)
+            val spinnerPosition: Int = adapter.getPosition(item!!.category)
             dropdown.setSelection(spinnerPosition)
 
         }
@@ -760,7 +760,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
 
     // retrieving the details of a posted item
     fun getItemImages(){
-        item.resources?.filter{
+        item!!.resources?.filter{
             it.resourceType!!.toString().equals("image", ignoreCase = true)
         }!!.map {
             itemImagesUri.add(it.resourceLink!!)
@@ -802,7 +802,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     fun getItemVideo(){
-        item.resources?.filter{
+        item!!.resources?.filter{
             it.resourceType!!.toString().equals("video", ignoreCase = true)
         }!!.map {
             itemVideoUri = it.resourceLink
