@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
@@ -22,6 +23,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
+import android.view.View
 
 
 class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -42,6 +44,8 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
 
+        auth = FirebaseAuth.getInstance()
+
         // set up Toolbar
         setSupportActionBar(findViewById(R.id.home_page_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -53,6 +57,12 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             R.string.nav_open,
             R.string.nav_close
         )
+
+        // set up userName in the drawer menu header
+        var navigationView = findViewById<NavigationView>(R.id.navigationView)
+        val headerView: View = navigationView.getHeaderView(0)
+        headerView.findViewById<TextView>(R.id.userName).setText(auth.currentUser!!.email)
+
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState();
