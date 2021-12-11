@@ -122,6 +122,7 @@ class UserItemFragment : Fragment(), UserItemsRecyclerViewAdapter.ShowUserItemCl
     }
 
     private fun fetchBoughtItemsForUser() {
+        items.clear()
         val requestQueue: RequestQueue = Volley.newRequestQueue(activity)
 
         var url = Constant.API_BASE_ADDRESS
@@ -134,8 +135,8 @@ class UserItemFragment : Fragment(), UserItemsRecyclerViewAdapter.ShowUserItemCl
             { response ->
                 System.out.println("Got the response\n")
                 val itemsForUserMap = response.userIdsToIdsMap
-                if (itemsForUserMap != null) {
-                    items = itemsForUserMap[currentUserName]?.toCollection(ArrayList()) ?: arrayListOf()
+                itemsForUserMap?.values?.map { userItems ->
+                    items.addAll(userItems.toCollection(ArrayList()))
                 }
                 updateRecylerView()
                 pullToRefresh.isRefreshing = false

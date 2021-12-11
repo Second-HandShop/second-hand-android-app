@@ -149,7 +149,7 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 Toast.makeText(this, "Feature Coming Soon.",
                     Toast.LENGTH_LONG).show()
             }
-            R.id.notification -> {
+            R.id.chatHistory -> {
                 Toast.makeText(this, "Feature Coming Soon.",
                     Toast.LENGTH_LONG).show()
             }
