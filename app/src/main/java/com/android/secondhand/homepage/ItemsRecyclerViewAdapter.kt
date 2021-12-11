@@ -7,11 +7,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.secondhand.R
-import com.android.secondhand.apis.Constant
 import com.squareup.picasso.Picasso
-import io.swagger.server.models.Item
+import com.android.secondhand.models.Item
 
 class ItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<ItemsRecyclerViewAdapter.PostViewHolder>() {
+
+    // myListener : ItemsFragment
+    var myListener:ShowItemClickListener? = null
+    interface ShowItemClickListener{
+        fun onItemClick(item: Item)
+    }
+
+    fun setListener(listener : ShowItemClickListener){
+        myListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_item_card, parent, false)
@@ -30,6 +39,12 @@ class ItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<Item
         val itemImage = itemView.findViewById<ImageView>(R.id.itemImage)
         val itemName = itemView.findViewById<TextView>(R.id.itemName)
         val itemPrice = itemView.findViewById<TextView>(R.id.itemPrice)
+
+        init{
+            itemView.setOnClickListener {
+                myListener?.onItemClick(items[adapterPosition])
+            }
+        }
 
         fun bind(position: Int) {
             itemName.text = items[position].name

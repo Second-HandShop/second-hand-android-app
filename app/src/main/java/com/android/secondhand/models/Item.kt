@@ -9,7 +9,12 @@
 * https://github.com/swagger-api/swagger-codegen.git
 * Do not edit the class manually.
 */
-package io.swagger.server.models
+package com.android.secondhand.models
+
+import com.google.gson.annotations.SerializedName
+import io.swagger.server.models.ItemResource
+import io.swagger.server.models.SoldInfo
+import java.io.Serializable
 
 /**
  * 
@@ -23,8 +28,21 @@ package io.swagger.server.models
  * @param userId 
  * @param resources 
  */
+//
+//data class Item(
+//    @SerializedName "id" val id : Long? = null,
+//    val name: String? = null,
+//    val description: String? = null,
+//    val category: String? = null,
+//    val addedOn: String? = null,
+//    val price: Float? = null,
+//    val soldInfo: SoldInfo? = null,
+//    val userId: String? = null,
+//    val resources: Array<ItemResource>? = null
+//
+//):Serializable
 data class Item (
-    val id: kotlin.Long? = null,
+    val id : Long? = null,
     val name: kotlin.String? = null,
     val description: kotlin.String? = null,
     /* Item category */
@@ -34,7 +52,7 @@ data class Item (
     val soldInfo: SoldInfo? = null,
     val userId: kotlin.String? = null,
     val resources: kotlin.Array<ItemResource>? = null
-) {
+):Serializable {
 
 }
 

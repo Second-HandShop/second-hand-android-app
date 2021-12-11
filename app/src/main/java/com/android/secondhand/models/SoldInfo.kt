@@ -11,6 +11,8 @@
 */
 package io.swagger.server.models
 
+import java.io.Serializable
+
 
 /**
  * 
@@ -24,7 +26,7 @@ data class SoldInfo (
     val soldAtPrice: kotlin.Float? = null,
     val soldOn: String? = null,
     val soldToUserId: kotlin.String? = null
-) {
+):Serializable {
 
 }
 
