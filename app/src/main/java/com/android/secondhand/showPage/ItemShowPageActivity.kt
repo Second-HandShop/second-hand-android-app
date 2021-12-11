@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.widget.NestedScrollView
 import com.android.secondhand.R
+import com.android.secondhand.apis.Constant
 import com.android.secondhand.models.Item
 import com.cloudinary.android.MediaManager
 import com.google.android.exoplayer2.ExoPlayer
@@ -56,10 +57,10 @@ class ItemShowPageActivity : AppCompatActivity() {
         bindItemData()
 
 
-
         // set up collapsing toolbar
         setSupportActionBar(findViewById(R.id.show_page_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.title = if(item.name?.length!! > 20) item.name?.substring(0, 20) + "..." else item.name
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
         // set up scrollview
@@ -83,12 +84,13 @@ class ItemShowPageActivity : AppCompatActivity() {
     }
 
     fun bindItemData(){
-        val itemName = findViewById<TextView>(R.id.itemName)
+        val userIdText = findViewById<TextView>(R.id.userIdText)
         val itemPrice = findViewById<TextView>(R.id.itemPrice)
         val itemDescription= findViewById<TextView>(R.id.itemDescription)
         val itemVideo = findViewById<CardView>(R.id.itemVideo)
 
-        itemName.setText(item.name)
+        //TODO: get user id from firebase
+        userIdText.text = Constant.LOGGED_IN_USER_ID
         itemPrice.setText("$ ${item.price}")
         itemDescription.setText(item.description)
 

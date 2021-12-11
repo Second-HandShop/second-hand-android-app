@@ -12,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.android.secondhand.editPage.ItemEditPageActivity
 import com.android.secondhand.R
+import com.android.secondhand.apis.Constant
 import com.android.secondhand.login.LoginActivity
 import com.android.secondhand.showPage.ItemShowPageActivity
 import com.android.secondhand.useritems.UserItems
@@ -64,9 +65,9 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         // set up cloudinary
         if(!hasInitialized){
             val config = hashMapOf<String, String>()
-            config["cloud_name"] = "dqg4lzcl8"
-            config["api_key"] = "736355668776457"
-            config["api_secret"] = "ngcVM7KIwnAiFK9dQXlzkEAxm2I"
+            config["cloud_name"] = Constant.CLOUD_NAME
+            config["api_key"] = Constant.API_KEY
+            config["api_secret"] = Constant.API_SECRET
             MediaManager.init(this, config)
             hasInitialized = true
         }
@@ -123,10 +124,6 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     // click handlers for the menu items on Navigation Drawer
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.to_be_deleted -> {
-                val intent = Intent(this, ItemShowPageActivity::class.java)
-                startActivity(intent)
-            }
             R.id.userItems -> {
                 val intent = Intent(this, UserItems::class.java)
                 startActivity(intent)
@@ -137,6 +134,14 @@ class HomePageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     Toast.LENGTH_LONG).show()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
+            }
+            R.id.userProfile -> {
+                Toast.makeText(this, "Feature Coming Soon.",
+                    Toast.LENGTH_LONG).show()
+            }
+            R.id.notification -> {
+                Toast.makeText(this, "Feature Coming Soon.",
+                    Toast.LENGTH_LONG).show()
             }
         }
         return true

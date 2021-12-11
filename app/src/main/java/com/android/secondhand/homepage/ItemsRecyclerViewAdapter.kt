@@ -51,7 +51,7 @@ class ItemsRecyclerViewAdapter(val items: List<Item>): RecyclerView.Adapter<Item
             itemPrice.text = items[position].price.toString()
 
             val url = (items[position].resources?.get(0)?.resourceLink
-                ?: "")
+                ?: "https://res.cloudinary.com/dqg4lzcl8/image/upload/v1639208576/sample/sh_icon_jcqeox.jpg")
             Picasso.get().load(url).error(R.mipmap.ic_launcher).fit().centerInside().into(itemImage)
         }
     }

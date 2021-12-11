@@ -157,7 +157,7 @@ class ItemEditPageActivity : AppCompatActivity(), View.OnClickListener,
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'")
         val currentDateAndTime: String = simpleDateFormat.format(Date());
         //TODO: get user from firebase
-        var userId = Constant.loggedInUserId
+        var userId = Constant.LOGGED_IN_USER_ID
 
         val item = Item(
             name = itemName.text.toString(),

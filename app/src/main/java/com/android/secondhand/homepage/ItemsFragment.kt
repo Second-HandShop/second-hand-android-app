@@ -50,7 +50,7 @@ class ItemsFragment : Fragment(), ItemsRecyclerViewAdapter.ShowItemClickListener
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_items, container, false)
         //:TODO uncomment the code on the next line fetch from firebase
-        currentUserName = Constant.loggedInUserId//auth.currentUser?.displayName
+        currentUserName = Constant.LOGGED_IN_USER_ID//auth.currentUser?.displayName
 
         searchBar = activity?.findViewById(R.id.searchBar)!!
         updateData()
@@ -61,21 +61,6 @@ class ItemsFragment : Fragment(), ItemsRecyclerViewAdapter.ShowItemClickListener
             updateData() // your code
             pullToRefresh.isRefreshing = true
         }
-
-
-
-        // filter posts by category (tab)
-//        if(tab.equals("All")){
-//            items = ArrayList(allPosts)
-//        }else{
-//            allPosts.forEach {
-//                if(it.category.equals(tab))
-//                    items.add(it)
-//            }
-//        }
-
-        // set up RecyclerView
-
 
         return root
     }
