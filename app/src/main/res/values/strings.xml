@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Second Hand</string>
+
+    <!--to toggle the open close button of the navigation drawer-->
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_account">Create Account</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="new_user_sign_up">New User? Sign Up</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="email_id">Email Id</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="enter_a_password">Enter a password</string>
+    <string name="su_email">SU Email</string>
+    <string name="send_verification_link">Send Verification Link</string>
+    <string name="enter_su_email">Enter SU Email</string>
+    <string name="email_verification">Email Verification</string>
+</resources>
